@@ -11,4 +11,4 @@ function handleClick() {
 function init() {
     body.addEventListener("click", handleClick);
 }
-init();
+init(); //changed
