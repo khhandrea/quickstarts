@@ -2,3 +2,12 @@ body{
     background-color:darkgray;
     color:black;
 }
+
+.form, 
+.greetings {
+    display : none;
+}
+
+.showing {
+    display : block;
+}
