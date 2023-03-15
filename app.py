@@ -7,6 +7,7 @@ app = Flask(__name__)
 api = Api(app, version='1.0', title='Simple API', description='sample swagger docs', doc='/api-docs')
 
 default_api = api.namespace('default', description='just information')
+users_api = api.namespace('users', description='handle user data')
 addition_api = api.namespace('addition', description='just addition')
 multliplication_api = api.namespace('multiplication', description='just multiplication')
 pythagorean_api = api.namespace('pythagorean', description='Pythagorean theorem')
@@ -16,12 +17,16 @@ class Home(Resource):
     def get(self):
         return 'default requests!'
 
-@default_api.route('/users/<user_name>/<int:user_id>')
+@users_api.route('/<user_name>/<int:user_id>')
 class Home(Resource):
     def get(self, user_name, user_id):
         data = {}
         data['message'] = f'Hello, {user_name}({user_id})!'
         return data
+    
+    def delete(self, user_name, user_id):
+        data = {}
+        data['message'] = f'{user_name}({user_id}) deleted successfully.'
 
 @addition_api.route('/<int:a>/<int:b>')
 class Addition(Resource):
