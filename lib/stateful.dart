@@ -19,6 +19,13 @@ class _StatefulAppState extends State<StatefulApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            color: Colors.red,
+          ),
+        ),
+      ),
       home: Scaffold(
         backgroundColor: const Color(0xFFF4EDDB),
         body: Center(
@@ -26,12 +33,7 @@ class _StatefulAppState extends State<StatefulApp> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                "Click count",
-                style: TextStyle(
-                  fontSize: 30,
-                ),
-              ),
+              const MyLargeTitle(),
               Text(
                 "$counter",
                 style: const TextStyle(
@@ -48,6 +50,23 @@ class _StatefulAppState extends State<StatefulApp> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MyLargeTitle extends StatelessWidget {
+  const MyLargeTitle({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "Click count",
+      style: TextStyle(
+        fontSize: 30,
+        color: Theme.of(context).textTheme.titleLarge?.color,
       ),
     );
   }
