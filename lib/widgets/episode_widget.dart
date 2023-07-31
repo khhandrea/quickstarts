@@ -23,10 +23,14 @@ class Episode extends StatelessWidget {
     return GestureDetector(
       onTap: onButtonTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 20),
+        margin: const EdgeInsets.only(bottom: 4),
         decoration: BoxDecoration(
-          color: Colors.green.shade400,
-          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            width: 2,
+            color: Colors.green.shade300,
+          ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -36,14 +40,37 @@ class Episode extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(episode.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  )),
-              const Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.white,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    episode.title,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    episode.date,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.star_rounded,
+                    color: Colors.red.shade400,
+                  ),
+                  Text(episode.rating),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.green.shade900,
+                  ),
+                ],
               ),
             ],
           ),
