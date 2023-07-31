@@ -28,7 +28,7 @@ class Webtoon extends StatelessWidget {
           Hero(
             tag: id,
             child: Container(
-              width: 200,
+              width: 180,
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -42,6 +42,9 @@ class Webtoon extends StatelessWidget {
               ),
               child: Image.network(
                 thumb,
+                headers: const {
+                  'Referer': 'https://comic.naver.com',
+                },
               ),
             ),
           ),
@@ -49,7 +52,7 @@ class Webtoon extends StatelessWidget {
             height: 10,
           ),
           SizedBox(
-            width: 200,
+            width: 180,
             child: Center(
               child: Text(
                 title,
