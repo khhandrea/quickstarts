@@ -1,156 +1,93 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_toonflix/models/webtoon_model.dart';
+import 'package:flutter_toonflix/services/api_service.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  static const twentyFiveMinutes = 1500;
-  int totalSeconds = twentyFiveMinutes;
-  late Timer timer;
-  bool isRunning = false;
-  int totalPomodoros = 0;
-
-  void onTick(Timer timer) {
-    if (totalSeconds == 0) {
-      setState(() {
-        isRunning = false;
-        totalSeconds = twentyFiveMinutes;
-        totalPomodoros += 1;
-      });
-      timer.cancel();
-    } else {
-      setState(() {
-        totalSeconds -= 1;
-      });
-    }
-  }
-
-  void onStartPressed() {
-    timer = Timer.periodic(
-      const Duration(seconds: 1),
-      onTick,
-    );
-    setState(() {
-      isRunning = true;
-    });
-  }
-
-  void onPausePressed() {
-    timer.cancel();
-    setState(() {
-      isRunning = false;
-    });
-  }
-
-  void onResetPressed() {
-    if (isRunning) {
-      timer.cancel();
-    }
-    setState(() {
-      isRunning = false;
-      totalSeconds = twentyFiveMinutes;
-    });
-  }
-
-  String format(int seconds) {
-    var duration = Duration(seconds: seconds);
-    return duration.toString().substring(2, 7);
-  }
+  final Future<List<WebtoonModel>> webtoons = ApiService.getTodaysToons();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      body: Column(
-        children: [
-          Flexible(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                format(totalSeconds),
-                style: TextStyle(
-                  color: Theme.of(context).cardColor,
-                  fontSize: 89,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text(
+          "Today's toons",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w400,
           ),
-          Flexible(
-            flex: 2,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: isRunning ? onPausePressed : onStartPressed,
-                    icon: Icon(
-                      isRunning
-                          ? Icons.pause_circle_outline
-                          : Icons.play_circle_outline,
-                    ),
-                    iconSize: 120,
-                    color: Theme.of(context).cardColor,
-                  ),
-                  IconButton(
-                    onPressed: onResetPressed,
-                    icon: const Icon(
-                      Icons.restore_outlined,
-                    ),
-                    iconSize: 40,
-                    color: Theme.of(context).cardColor,
+        ),
+        elevation: 1,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.green,
+      ),
+      body: FutureBuilder(
+        future: webtoons,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Column(
+              children: [
+                const SizedBox(height: 50),
+                Expanded(
+                  child: makeList(snapshot),
+                ),
+              ],
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+    );
+  }
+
+  ListView makeList(AsyncSnapshot<List<WebtoonModel>> snapshot) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: snapshot.data!.length,
+      padding: const EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 20,
+      ),
+      itemBuilder: (context, index) {
+        var webtoon = snapshot.data![index];
+
+        return Column(
+          children: [
+            Container(
+              width: 250,
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 15,
+                    offset: const Offset(5, 5),
+                    color: Colors.black.withOpacity(0.5),
                   ),
                 ],
               ),
+              child: Image.network(
+                webtoon.thumb,
+              ),
             ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(50),
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Pomodoro",
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.displayLarge!.color,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          "$totalPomodoros",
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.displayLarge!.color,
-                            fontSize: 60,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+            const SizedBox(
+              height: 10,
             ),
-          ),
-        ],
+            Text(
+              webtoon.title,
+              style: const TextStyle(
+                fontSize: 22,
+              ),
+            ),
+          ],
+        );
+      },
+      separatorBuilder: (context, index) => const SizedBox(
+        width: 40,
       ),
     );
   }
