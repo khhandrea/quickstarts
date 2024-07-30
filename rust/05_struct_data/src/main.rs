@@ -5,6 +5,9 @@ struct User {
     sign_in_count: u64,
 }
 
+struct Point(i32, i32, i32);
+struct Player;
+
 fn build_user(username: String, email: String) -> User {
     User {
         active: true,
@@ -28,4 +31,7 @@ fn main() {
         email: String::from("khhandrea2@gmail.com"),
         ..user1
     };
+
+    let coordinate = Point(0, 0, 0);
+    let player = Player;
 }
