@@ -1,4 +1,5 @@
 # rust
 rust/*/target/*
+bevy-game/target/*
 *.rs.bk
 *.pdb
