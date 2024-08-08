@@ -1,23 +1,36 @@
-struct Color(u32, u32, u32);
-
 enum Message {
     Quit,
     Move {x: i32, y: i32},
     Write(String),
-    ChangeColor(Color)
+    ChangeColor(i32, i32, i32),
 }
 
 impl Message {
     fn call(&self) {
         match self {
-            Message::Quit => println!("Quit!"),
-            Message::Move {x, y} => println!("Move to ({x}, {y})"),
-            Message::Write(message) => println!("Message: {message}"),
-            Message::ChangeColor(Color(r, g, b)) => println!("Color changed to ({r}, {g}, {b})"),
+            Message::Quit => {println!("You quit");},
+            Message::Move {x, y} => {println!("Move to ({}, {})", x, y);},
+            Message::Write(msg) => {println!("Write message: {}", msg);},
+            Message::ChangeColor(r, g, b) => {println!("Change color to ({}, {}, {})", r, g, b);},
         }
     }
 }
+
+
+
 fn main() {
-    let m = Message::Write("Hello, world!".to_string());
-    m.call();
+    let mut msg = Message::Quit;
+    msg.call();
+    msg = Message::Move {x: 24, y: 32};
+    msg.call();
+    msg = Message::Write("Hello, world!".to_string());
+    msg.call();
+    msg = Message::ChangeColor(255, 0, 255);
+    msg.call();
+
+    if let Message::ChangeColor(r, g, b) = msg {
+        println!("({}, {}, {}) from if let phrase", r, g, b);
+    } else {
+        println!("It's not color in if let phrase");
+    }
 }
