@@ -17,8 +17,16 @@ impl Message {
 }
 
 
-
 fn main() {
+    let x = 10i8;
+    let y: Option<i8> = Some(5);
+    let z: i8 = if let Some(y) = y {
+        x + y 
+    } else {
+        0i8
+    };
+    println!("x + y = {}", z);
+
     let mut msg = Message::Quit;
     msg.call();
     msg = Message::Move {x: 24, y: 32};
